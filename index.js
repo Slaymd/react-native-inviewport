@@ -4,27 +4,30 @@ import React, { Component } from 'react'
 import { View, NativeMethodsMixin, Dimensions } from 'react-native'
 
 exports.InViewPort = class extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { rectTop: 0, rectBottom: 0 }
+
+  state = {
+    rectTop: 0,
+    rectBottom: 0
   }
 
   componentDidMount() {
-    if (!this.props.disabled) {
-      this.startWatching()
-    }
+    if (!this.props.disabled)
+      this.startWatching();
   }
 
   componentWillUnmount() {
-    this.stopWatching()
+    this.stopWatching();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.disabled) {
-      this.stopWatching()
-    } else {
-      this.lastValue = null
-      this.startWatching()
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    //Disabled props updated
+    if (this.props.disabled !== prevProps.disabled) {
+      if (this.props.disabled)
+        this.stopWatching();
+      else {
+        this.lastValue = null;
+        this.startWatching()
+      }
     }
   }
 
